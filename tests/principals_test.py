@@ -51,7 +51,7 @@ def test_regrade_assignment(client, h_principal):
         '/principal/assignments/grade',
         json={
             'id': 4,
-            'grade': GradeEnum.B.value
+            'grade': GradeEnum.C.value
         },
         headers=h_principal
     )
@@ -59,4 +59,4 @@ def test_regrade_assignment(client, h_principal):
     assert response.status_code == 200
 
     assert response.json['data']['state'] == AssignmentStateEnum.GRADED.value
-    assert response.json['data']['grade'] == GradeEnum.B
+    assert response.json['data']['grade'] == GradeEnum.C

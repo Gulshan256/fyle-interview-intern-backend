@@ -12,7 +12,7 @@ from core.apis.decorators import AuthPrincipal
 from core.models.users import User
 from core.models.students import Student
 from core.models.teachers import Teacher
-from core.models.assignments import Assignment
+from core.models.assignments import Assignment, GradeEnum,AssignmentStateEnum
 
 # revision identifiers, used by Alembic.
 revision = '2087a1db8595'
@@ -86,6 +86,12 @@ def upgrade():
     )
 
     Assignment.submit(
+        _id=assignment_2.id,
+        teacher_id=teacher_2.id,
+        auth_principal=AuthPrincipal(user_id=student_1.user_id, student_id=student_1.id)
+    )
+
+    Assignment.submit(
         _id=assignment_3.id,
         teacher_id=teacher_2.id,
         auth_principal=AuthPrincipal(user_id=student_2.user_id, student_id=student_2.id)
@@ -97,7 +103,38 @@ def upgrade():
         auth_principal=AuthPrincipal(user_id=student_2.user_id, student_id=student_2.id)
     )
 
+
+    Assignment.mark_grade(
+        _id=assignment_1.id,
+        grade=GradeEnum.A,
+        auth_principal=AuthPrincipal(user_id=teacher_1.user_id, teacher_id=teacher_1.id)
+    )
+
+    Assignment.mark_grade(
+        _id=assignment_2.id,
+        grade=GradeEnum.A,
+        auth_principal=AuthPrincipal(user_id=teacher_1.user_id, teacher_id=teacher_1.id)
+    )
+
+    # Assignment.set_state(
+    #     _id=assignment_2.id,
+    #     state=AssignmentStateEnum.SUBMITTED
+
+    # )
+
+    Assignment.mark_grade(
+        _id=assignment_3.id,
+        grade=GradeEnum.C,
+        auth_principal=AuthPrincipal(user_id=teacher_1.user_id, teacher_id=teacher_1.id)
+    )
+    Assignment.mark_grade(
+        _id=assignment_4.id,
+        grade=GradeEnum.C,
+        auth_principal=AuthPrincipal(user_id=teacher_1.user_id, teacher_id=teacher_1.id)
+    )
+
     db.session.commit()
+
     # ### end Alembic commands ###
 
 

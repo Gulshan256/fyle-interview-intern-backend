@@ -85,9 +85,30 @@ class Assignment(db.Model):
         return assignment
 
     @classmethod
+    def set_state(cls, _id, state=AssignmentStateEnum.GRADED):
+        assignment = Assignment.get_by_id(_id)
+        assertions.assert_found(assignment, 'No assignment with this id was found')
+        assignment.state = state
+        db.session.flush()
+
+        return assignment
+
+    @classmethod
     def get_assignments_by_student(cls, student_id):
         return cls.filter(cls.student_id == student_id).all()
 
     @classmethod
     def get_assignments_by_teacher(cls, teacher_id):
         return cls.filter(cls.teacher_id == teacher_id).all()
+    
+    # get assignments by id and grade
+    @classmethod
+    def get_assignments_by_id_and_grade(cls, _id, grade):
+        return cls.filter(cls.id == _id, cls.grade == grade).first()
+    
+    # List all submitted and graded assignments
+    @classmethod
+    def get_submitted_and_graded_assignments(cls):
+        return cls.filter(cls.state.in_([AssignmentStateEnum.SUBMITTED, AssignmentStateEnum.GRADED])).all()
+    
+    
